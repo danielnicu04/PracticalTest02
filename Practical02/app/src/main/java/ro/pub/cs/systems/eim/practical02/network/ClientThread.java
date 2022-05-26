@@ -14,29 +14,23 @@ import ro.pub.cs.systems.eim.practical02.general.Utilities;
 public class ClientThread extends Thread {
     private String address;
     private int port;
-    private String city;
-    private String informationType;
-    private TextView weatherForecastTextView;
 
-//    private String currencyInfo;
-//    private TextView currencyTextView;
+
+    private String key;
+    private String value;
+    private String requestType;
+    private TextView responseTextView;
 
     private Socket socket;
 
-    public ClientThread(String address, int port, String city, String informationType, TextView weatherForecastTextView) {
+    public ClientThread(String address, int port, String key, String value, String requestType, TextView responseTextView) {
         this.address = address;
         this.port = port;
-        this.city = city;
-        this.informationType = informationType;
-        this.weatherForecastTextView = weatherForecastTextView;
+        this.key = key;
+        this.value = value;
+        this.requestType = requestType;
+        this.responseTextView = responseTextView;
     }
-
-//    public ClientThread(String address, int port, String currencyInfo, TextView currencyTextView) {
-//        this.address = address;
-//        this.port = port;
-//        this.currencyInfo = currencyInfo;
-//        this.currencyTextView = currencyTextView;
-//    }
 
 
 
@@ -55,35 +49,25 @@ public class ClientThread extends Thread {
                 return;
             }
 
-            printWriter.println(city);
+            printWriter.println(key);
             printWriter.flush();
-            printWriter.println(informationType);
+            printWriter.println(value);
+            printWriter.flush();
+            printWriter.println(requestType);
             printWriter.flush();
 
-//            printWriter.println(currencyInfo);
-//            printWriter.flush();
 
-            String weatherInformation;
-            while ((weatherInformation = bufferedReader.readLine()) != null) {
-                final String finalizedWeateherInformation = weatherInformation;
-                weatherForecastTextView.post(new Runnable() {
+
+            String responseValue;
+            while ((responseValue = bufferedReader.readLine()) != null) {
+                final String finalizedResponse = responseValue;
+                responseTextView.post(new Runnable() {
                     @Override
                     public void run() {
-                        weatherForecastTextView.setText(finalizedWeateherInformation);
+                        responseTextView.setText(finalizedResponse);
                     }
                 });
             }
-
-//            String currencyInfo;
-//            while ((currencyInfo = bufferedReader.readLine()) != null) {
-//                final String finalizedCurrencyInfo = currencyInfo;
-//                currencyTextView.post(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        currencyTextView.setText(finalizedCurrencyInfo);
-//                    }
-//                });
-//            }
         } catch (IOException ioException) {
             Log.e(Constants.TAG, "[CLIENT THREAD] An exception has occurred: " + ioException.getMessage());
             if (Constants.DEBUG) {

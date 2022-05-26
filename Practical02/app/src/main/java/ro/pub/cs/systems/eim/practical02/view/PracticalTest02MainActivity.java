@@ -29,7 +29,7 @@ public class PracticalTest02MainActivity extends AppCompatActivity {
     private EditText valueEditText = null;
     private Button getRequestButton = null;
     private Button postRequestButton = null;
-    private TextView weatherForecastTextView = null;
+    private TextView responseTextView = null;
 
     private ServerThread serverThread = null;
     private ClientThread clientThread = null;
@@ -62,73 +62,76 @@ public class PracticalTest02MainActivity extends AppCompatActivity {
 
     }
 
-//    private GetWeatherForecastButtonClickListener getWeatherForecastButtonClickListener = new GetWeatherForecastButtonClickListener();
-//    private class GetWeatherForecastButtonClickListener implements Button.OnClickListener {
-//
-//        @Override
-//        public void onClick(View view) {
-//            String clientAddress = clientAddressEditText.getText().toString();
-//            String clientPort = clientPortEditText.getText().toString();
-//            if (clientAddress == null || clientAddress.isEmpty()
-//                    || clientPort == null || clientPort.isEmpty()) {
-//                Toast.makeText(getApplicationContext(), "[MAIN ACTIVITY] Client connection parameters should be filled!", Toast.LENGTH_SHORT).show();
-//                return;
-//            }
-//            if (serverThread == null || !serverThread.isAlive()) {
-//                Toast.makeText(getApplicationContext(), "[MAIN ACTIVITY] There is no server to connect to!", Toast.LENGTH_SHORT).show();
-//                return;
-//            }
-//            String city = cityEditText.getText().toString();
-//            String informationType = informationTypeSpinner.getSelectedItem().toString();
-//            if (city == null || city.isEmpty()
-//                    || informationType == null || informationType.isEmpty()) {
-//                Toast.makeText(getApplicationContext(), "[MAIN ACTIVITY] Parameters from client (city / information type) should be filled", Toast.LENGTH_SHORT).show();
-//                return;
-//            }
-//
-//            weatherForecastTextView.setText(Constants.EMPTY_STRING);
-//
-//            clientThread = new ClientThread(
-//                    clientAddress, Integer.parseInt(clientPort), city, informationType, weatherForecastTextView
-//            );
-//            clientThread.start();
-//        }
-//
-//    }
+    private GetButtonClickListener getButtonClickListener = new GetButtonClickListener();
+    private class GetButtonClickListener implements Button.OnClickListener {
 
-//    private GetCurrencyInfoButtonClickListener getCurrencyInfoButtonClickListener  = new GetCurrencyInfoButtonClickListener();
-//    private class GetCurrencyInfoButtonClickListener implements Button.OnClickListener {
-//
-//        @Override
-//        public void onClick(View view) {
-//            String clientAddress = clientAddressEditText.getText().toString();
-//            String clientPort = clientPortEditText.getText().toString();
-//            if (clientAddress == null || clientAddress.isEmpty()
-//                    || clientPort == null || clientPort.isEmpty()) {
-//                Toast.makeText(getApplicationContext(), "[MAIN ACTIVITY] Client connection parameters should be filled!", Toast.LENGTH_SHORT).show();
-//                return;
-//            }
-//            if (serverThread == null || !serverThread.isAlive()) {
-//                Toast.makeText(getApplicationContext(), "[MAIN ACTIVITY] There is no server to connect to!", Toast.LENGTH_SHORT).show();
-//                return;
-//            }
-//
-//            String currencyInfo = informationTypeSpinner.getSelectedItem().toString();
-//            if (currencyInfo == null || currencyInfo.isEmpty()) {
-//                Toast.makeText(getApplicationContext(), "[MAIN ACTIVITY] Parameters from client (currency) should be filled", Toast.LENGTH_SHORT).show();
-//                return;
-//            }
-//
-//
-//            currencyTextView.setText(Constants.EMPTY_STRING);
-//
-//            clientThread = new ClientThread(
-//                    clientAddress, Integer.parseInt(clientPort), currencyInfo, currencyTextView
-//            );
-//            clientThread.start();
-//        }
-//
-//    }
+        @Override
+        public void onClick(View view) {
+            String clientAddress = clientAddressEditText.getText().toString();
+            String clientPort = clientPortEditText.getText().toString();
+            if (clientAddress == null || clientAddress.isEmpty()
+                    || clientPort == null || clientPort.isEmpty()) {
+                Toast.makeText(getApplicationContext(), "[MAIN ACTIVITY] Client connection parameters should be filled!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (serverThread == null || !serverThread.isAlive()) {
+                Toast.makeText(getApplicationContext(), "[MAIN ACTIVITY] There is no server to connect to!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            String key = keyEditText.getText().toString();
+            String value = valueEditText.getText().toString();
+            if (key == null || key.isEmpty()
+                    || value == null || value.isEmpty()) {
+                Toast.makeText(getApplicationContext(), "[MAIN ACTIVITY] Parameters from client (key / value type) should be filled", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            responseTextView.setText(Constants.EMPTY_STRING);
+
+            String requestType = "GET";
+
+            clientThread = new ClientThread(
+                    clientAddress, Integer.parseInt(clientPort), key, value, requestType, responseTextView
+            );
+            clientThread.start();
+        }
+    }
+
+    private PostButtonClickListener postButtonClickListener = new PostButtonClickListener();
+    private class PostButtonClickListener implements Button.OnClickListener {
+
+        @Override
+        public void onClick(View view) {
+            String clientAddress = clientAddressEditText.getText().toString();
+            String clientPort = clientPortEditText.getText().toString();
+            if (clientAddress == null || clientAddress.isEmpty()
+                    || clientPort == null || clientPort.isEmpty()) {
+                Toast.makeText(getApplicationContext(), "[MAIN ACTIVITY] Client connection parameters should be filled!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (serverThread == null || !serverThread.isAlive()) {
+                Toast.makeText(getApplicationContext(), "[MAIN ACTIVITY] There is no server to connect to!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            String key = keyEditText.getText().toString();
+            String value = valueEditText.getText().toString();
+            if (key == null || key.isEmpty()
+                    || value == null || value.isEmpty()) {
+                Toast.makeText(getApplicationContext(), "[MAIN ACTIVITY] Parameters from client (key / value type) should be filled", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            responseTextView.setText(Constants.EMPTY_STRING);
+
+            String requestType = "POST";
+
+            clientThread = new ClientThread(
+                    clientAddress, Integer.parseInt(clientPort), key, value, requestType, responseTextView
+            );
+            clientThread.start();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,30 +151,13 @@ public class PracticalTest02MainActivity extends AppCompatActivity {
         valueEditText = (EditText)findViewById(R.id.value_edit_text);
 
         getRequestButton = (Button)findViewById(R.id.get_button);
-        postRequestButton = (Button)findViewById(R.id.post_button);
-        //getWeatherForecastButton.setOnClickListener(getWeatherForecastButtonClickListener);
-        weatherForecastTextView = (TextView)findViewById(R.id.weather_forecast_text_view);
-    }
+        getRequestButton.setOnClickListener(getButtonClickListener);
 
-//        @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        Log.i(Constants.TAG, "[MAIN ACTIVITY] onCreate() callback method has been invoked");
-//        setContentView(R.layout.activity_practical_test02_main);
-//
-//        //Resources used by the server
-//        serverPortEditText = (EditText)findViewById(R.id.server_port_edit_text);
-//        connectButton = (Button)findViewById(R.id.connect_button);
-//        connectButton.setOnClickListener(connectButtonClickListener);
-//
-//        //Resources used by the client
-//        clientAddressEditText = (EditText)findViewById(R.id.client_address_edit_text);
-//        clientPortEditText = (EditText)findViewById(R.id.client_port_edit_text);
-//        informationTypeSpinner = (Spinner)findViewById(R.id.information_type_spinner);
-//        getCurrencyButton = (Button)findViewById(R.id.get_currency);
-//        getCurrencyButton.setOnClickListener(getCurrencyInfoButtonClickListener);
-//        currencyTextView = (TextView)findViewById(R.id.currency_text_view);
-//    }
+        postRequestButton = (Button)findViewById(R.id.post_button);
+        postRequestButton.setOnClickListener(postButtonClickListener);
+
+        responseTextView = (TextView)findViewById(R.id.response_text_view);
+    }
 
 
     @Override

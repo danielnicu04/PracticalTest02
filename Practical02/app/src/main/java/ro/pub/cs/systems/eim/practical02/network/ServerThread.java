@@ -15,8 +15,7 @@ public class ServerThread extends Thread {
     private int port = 0;
     private ServerSocket serverSocket = null;
 
-    private HashMap<String, WeatherForecastInformation> data = null;
-//    private HashMap<String, CurrencyInfo> data = null;
+    private HashMap<String, String> data = null;
 
     /**
      * In the constructor we are going to specify the port where the server will run.
@@ -53,21 +52,13 @@ public class ServerThread extends Thread {
         return serverSocket;
     }
 
-    public synchronized void setData(String city, WeatherForecastInformation weatherForecastInformation) {
-        this.data.put(city, weatherForecastInformation);
+    public synchronized void setData(String key, String value) {
+        this.data.put(key, value);
     }
 
-    public synchronized HashMap<String, WeatherForecastInformation> getData() {
+    public synchronized HashMap<String, String> getData() {
         return data;
     }
-
-//    public synchronized void setData(String key, CurrencyInfo currencyInfo) {
-//        this.data.put(key, currencyInfo);
-//    }
-//
-//    public synchronized HashMap<String, CurrencyInfo> getData() {
-//        return data;
-//    }
 
     @Override
     public void run() {
